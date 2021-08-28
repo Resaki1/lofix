@@ -16,14 +16,14 @@ function App() {
     const dirHandle = await (window as any).showDirectoryPicker({ multiple: true });
 
     let entries = [];
-    for await (const entry of dirHandle.values()) {
-      entries.push(entry)
+    for await (const fileHandle of dirHandle.values()) {
+      const file = {
+        name: fileHandle.name,
+        fileHandle: fileHandle,
+      }
+      entries.push(file)
     }
-    console.log(entries)
     setMovies(entries)
-
-    console.log(await entries[0].getFile())
-    console.log(URL.createObjectURL(await entries[0].getFile()))
   }
 
   return (
