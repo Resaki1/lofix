@@ -10,8 +10,27 @@ export const getMovieDetails = (name: string): Promise<any> => {
     return response
 }
 
+export const getMoviePoster = (id: number) => {
+    return fetch(`https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=en-US&include_image_language=en,null`)
+        .then(res => res.json())
+        .then((result) => {
+            // get best poster path
+            let path;
+            let bestRating = 0;
+            result.posters?.forEach((poster: any) => {
+                if (poster.vote_average > bestRating) path = poster.file_path
+            })
+            // TODO: return placeholder image if no poster is found
+            // get image
+            return fetch(`https://image.tmdb.org/t/p/w500${path}`)
+                .then(res => res.blob())
+                .then((result) => { return result })
+        })
+        .catch(error => console.log(error))
+}
+
 export const getMovieBackdrop = (id: number) => {
-    return fetch(`https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}`)
+    return fetch(`https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=en-US&include_image_language=en,null`)
         .then(res => res.json())
         .then((result) => {
             // get best backdrop path

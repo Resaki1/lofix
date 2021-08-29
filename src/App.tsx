@@ -1,6 +1,6 @@
 import React from 'react';
 import { values, set } from 'idb-keyval';
-import { getMovieDetails, getMovieBackdrop } from "./api/api"
+import { getMovieDetails, getMovieBackdrop, getMoviePoster } from "./api/api"
 import Popup from "./components/Popup/Popup";
 import './App.css';
 
@@ -27,6 +27,7 @@ function App() {
             const movie = {
               id: searchResult.results[0].id,
               name: searchResult.results[0].original_title,
+              poster: await getMoviePoster(searchResult.results[0].id),
               backdrop: await getMovieBackdrop(searchResult.results[0].id),
               fileHandle: fileHandle,
             }
@@ -51,7 +52,7 @@ function App() {
       {
         movies && movies.map((movie: any) =>
           <div key={movie.name}>
-            <p onClick={() => setShowPopup(movie.name)}>{movie.name}</p>
+            {movie.poster && <img src={URL.createObjectURL(movie.poster)} onClick={() => setShowPopup(movie.name)} alt={movie.name} />}
             {showPopup === movie.name && <Popup movie={movie} close={() => setShowPopup(false)} />}
           </div>)
       }
