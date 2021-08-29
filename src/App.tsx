@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactPlayer from 'react-player'
 import { values, set } from 'idb-keyval';
+import Popup from "./components/Popup/Popup";
 import './App.css';
 
 function App() {
   const [source, setSource] = React.useState("")
   const [movies, setMovies]: any[] = React.useState()
+  const [showPopup, setShowPopup] = React.useState(false)
 
   const addMovies = (files: FileList): void => {
     console.log(files[0])
@@ -63,7 +65,10 @@ function App() {
       <button onClick={() => console.log(movies)}>test</button>
       {
         movies && movies.map((movie: any) =>
-          <p key={movie.name}>{movie.name}</p>)
+          <div key={movie.name}>
+            <p onClick={() => setShowPopup(movie.name)}>{movie.name}</p>
+            {showPopup === movie.name && <Popup movie={movie} close={() => setShowPopup(false)} />}
+          </div>)
       }
     </div>
   );
