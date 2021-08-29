@@ -18,13 +18,20 @@ function App() {
     await set("directory", dirHandle);
 
     let entries = [];
+    // loop over all entries in directory
     for await (const fileHandle of dirHandle.values()) {
-      const file = {
-        name: fileHandle.name,
-        fileHandle: fileHandle,
+      //check if entry is a video file
+      if (fileHandle.kind === "file") {
+        const file = await fileHandle.getFile()
+        if (file.type === "video/mp4") {
+          const movie = {
+            name: fileHandle.name,
+            fileHandle: fileHandle,
+          }
+          await set(movie.name, movie)
+          entries.push(movie)
+        }
       }
-      await set(file.name, file)
-      entries.push(file)
     }
     setMovies(entries)
   }
