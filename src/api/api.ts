@@ -6,12 +6,13 @@ export const getMovieDetails = (name: string): Promise<any> => {
 
     const response = fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${nameToSearch}`)
         .then(res => res.json())
+        // TODO: get best results
         .catch(error => console.log(error))
     return response
 }
 
 export const getMoviePoster = (id: number) => {
-    return fetch(`https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=en-US&include_image_language=en,null`)
+    return fetch(`https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=en-US&include_image_language=en`)
         .then(res => res.json())
         .then((result) => {
             // get best poster path
@@ -30,7 +31,7 @@ export const getMoviePoster = (id: number) => {
 }
 
 export const getMovieBackdrop = (id: number) => {
-    return fetch(`https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=en-US&include_image_language=en,null`)
+    return fetch(`https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=en-US&include_image_language=en`)
         .then(res => res.json())
         .then((result) => {
             // get best backdrop path

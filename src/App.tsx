@@ -7,10 +7,12 @@ import MovieCard from './components/MovieCard/MovieCard';
 
 function App() {
   const [movies, setMovies]: any[] = React.useState()
+  const [loading, setLoading]: any[] = React.useState(false)
 
   const handleClick = async () => {
     // open file picker
     const dirHandle = await (window as any).showDirectoryPicker({ multiple: true })
+    setLoading(true)
     await set("directory", dirHandle);
 
     let entries = [];
@@ -23,7 +25,6 @@ function App() {
           const searchResult = await getMovieDetails(fileHandle.name);
 
           if (searchResult.results.length > 0) {
-
             const movie = {
               id: searchResult.results[0].id,
               name: searchResult.results[0].original_title,
@@ -37,6 +38,8 @@ function App() {
         }
       }
     }
+    setLoading(false)
+    // TODO: add movies one by one for better loading experience
     setMovies(entries)
   }
 
@@ -50,6 +53,9 @@ function App() {
     <div className="App">
       <button onClick={handleClick}>choose directory</button>
       <div className="movies">
+        {
+          loading && <h1>loading</h1>
+        }
         {
           movies && movies.map((movie: any) => <MovieCard key={movie.id} movie={movie} />)
         }
