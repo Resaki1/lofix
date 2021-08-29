@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactPlayer from 'react-player'
+import { values, set } from 'idb-keyval';
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   const handleClick = async () => {
     // open file picker
     const dirHandle = await (window as any).showDirectoryPicker({ multiple: true });
+    await set("directory", dirHandle);
 
     let entries = [];
     for await (const fileHandle of dirHandle.values()) {
@@ -21,10 +23,17 @@ function App() {
         name: fileHandle.name,
         fileHandle: fileHandle,
       }
+      await set(file.name, file)
       entries.push(file)
     }
     setMovies(entries)
   }
+
+  React.useEffect(() => {
+    values().then((values) => {
+      setMovies(values)
+    })
+  }, [])
 
   return (
     <div className="App">
@@ -36,9 +45,7 @@ function App() {
       <button onClick={() => console.log(movies)}>test</button>
       {
         movies && movies.map((movie: any) =>
-          <>
-            <p>{movie.name}</p>
-          </>)
+          <p key={movie.name}>{movie.name}</p>)
       }
     </div>
   );
