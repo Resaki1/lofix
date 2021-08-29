@@ -1,0 +1,10 @@
+.movieCard {
+    cursor: pointer;
+    width: fit-content;
+}
+
+.movieCard > img {
+    width: 10vw;
+    margin: 1vw;
+    box-sizing: border-box;
+}

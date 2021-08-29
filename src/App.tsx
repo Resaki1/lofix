@@ -3,10 +3,10 @@ import { values, set } from 'idb-keyval';
 import { getMovieDetails, getMovieBackdrop, getMoviePoster } from "./api/api"
 import Popup from "./components/Popup/Popup";
 import './App.css';
+import MovieCard from './components/MovieCard/MovieCard';
 
 function App() {
   const [movies, setMovies]: any[] = React.useState()
-  const [showPopup, setShowPopup] = React.useState(false)
 
   const handleClick = async () => {
     // open file picker
@@ -49,13 +49,11 @@ function App() {
   return (
     <div className="App">
       <button onClick={handleClick}>choose directory</button>
-      {
-        movies && movies.map((movie: any) =>
-          <div key={movie.name}>
-            {movie.poster && <img src={URL.createObjectURL(movie.poster)} onClick={() => setShowPopup(movie.name)} alt={movie.name} />}
-            {showPopup === movie.name && <Popup movie={movie} close={() => setShowPopup(false)} />}
-          </div>)
-      }
+      <div className="movies">
+        {
+          movies && movies.map((movie: any) => <MovieCard key={movie.id} movie={movie} />)
+        }
+      </div>
     </div>
   );
 }
