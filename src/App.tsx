@@ -26,15 +26,12 @@ function App() {
         if (file.type === "video/mp4") {
           const searchResult = await getMovieDetails(fileHandle.name);
 
-          console.log(fileHandle.name + ":");
-          console.log(searchResult);
-
-          if (searchResult.results.length > 0) {
+          if (searchResult) {
             const movie = {
-              id: searchResult.results[0].id,
-              name: searchResult.results[0].original_title,
-              poster: await getImage(searchResult.results[0].poster_path),
-              backdrop: await getImage(searchResult.results[0].backdrop_path),
+              id: searchResult.id,
+              name: searchResult.original_title,
+              poster: await getImage(searchResult.poster_path),
+              backdrop: await getImage(searchResult.backdrop_path),
               fileHandle: fileHandle,
             };
             await set(movie.id, movie);

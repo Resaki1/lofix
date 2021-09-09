@@ -1,6 +1,6 @@
 const TMDB_API_KEY = "da2b03ca0b0a10e22f32080f94056b75";
 
-export const getMovieDetails = (name: string): Promise<any> => {
+export const getMovieDetails = (name: string): any => {
   const nameToSearch = name
     .replaceAll(" ", "+")
     .replaceAll("_", "+")
@@ -8,13 +8,28 @@ export const getMovieDetails = (name: string): Promise<any> => {
     .slice(0, -1)
     .join(".");
 
-  const response = fetch(
+  return fetch(
     `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${nameToSearch}`
   )
     .then((res) => res.json())
-    // TODO: get best results
+    .then((res) => {
+      console.log(name + ":");
+      console.log(res);
+
+      // TODO: better score system: take exact name match, original title and movie length into consideration
+      // TODO: get all movie details: https://developers.themoviedb.org/3/movies/get-movie-details
+      // TODO: chain queries: https://developers.themoviedb.org/3/getting-started/append-to-response
+      let currentBestMovie: any;
+      res.results.forEach((movie: any) => {
+        if (!currentBestMovie || currentBestMovie.popularity < movie.popularity)
+          currentBestMovie = movie;
+      });
+
+      console.log(currentBestMovie);
+      console.log("____________________________________");
+      return currentBestMovie;
+    })
     .catch((error) => console.log(error));
-  return response;
 };
 
 export const getImage = (path: string) => {
