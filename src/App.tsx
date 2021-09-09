@@ -22,6 +22,15 @@ function App() {
       // check if entry is a video file
       if (fileHandle.kind === "file") {
         const file = await fileHandle.getFile();
+
+        // get video duration
+        let video = document.createElement("video");
+        video.setAttribute("src", window.URL.createObjectURL(file));
+        let duration: number;
+        video.onloadeddata = function () {
+          duration = video.duration;
+          console.log(duration / 60);
+        };
         if (file.type === "video/mp4") {
           const searchResult = await getMovieDetails(fileHandle.name);
 
