@@ -1,7 +1,6 @@
 import React from "react";
 import { values, set } from "idb-keyval";
 import { getMovieDetails, getImage } from "./api/api";
-import Popup from "./components/Popup/Popup";
 import "./App.css";
 import MovieCard from "./components/MovieCard/MovieCard";
 
