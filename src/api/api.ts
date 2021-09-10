@@ -1,32 +1,57 @@
 const TMDB_API_KEY = "da2b03ca0b0a10e22f32080f94056b75";
 
-export const getMovieDetails = (name: string): any => {
-  const nameToSearch = name
-    .replaceAll(" ", "+")
-    .replaceAll("_", "+")
-    .split(".")
-    .slice(0, -1)
-    .join(".");
+export const getMovieDetails = (name: string, duration: number): any => {
+  const fileName = name.split(".").slice(0, -1).join(".");
+  const nameToSearch = fileName.replaceAll(" ", "+").replaceAll("_", "+");
 
   return fetch(
     `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${nameToSearch}`
   )
     .then((res) => res.json())
-    .then((res) => {
-      console.log(name + ":");
-      console.log(res);
-
+    .then(async (res) => {
       // TODO: better score system: take exact name match, original title and movie length into consideration
-      // TODO: get all movie details: https://developers.themoviedb.org/3/movies/get-movie-details
       // TODO: chain queries: https://developers.themoviedb.org/3/getting-started/append-to-response
       let currentBestMovie: any;
-      res.results.forEach((movie: any) => {
-        if (!currentBestMovie || currentBestMovie.popularity < movie.popularity)
-          currentBestMovie = movie;
-      });
+      let currentBestRuntime: number;
+      let exactMatchFound = false;
 
-      console.log(currentBestMovie);
-      console.log("____________________________________");
+      await Promise.all(
+        res.results.map(async (movie: any) => {
+          if (exactMatchFound) return;
+          let details;
+
+          // return details if file name is exact match
+          if (fileName == movie.original_title) {
+            exactMatchFound = true;
+            return await fetch(
+              `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_API_KEY}`
+            )
+              .then((res) => res.json())
+              .then((result) => {
+                currentBestMovie = result;
+              });
+          } else {
+            let runtimeDeviation: number;
+            await fetch(
+              `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_API_KEY}`
+            )
+              .then((res) => res.json())
+              .then((result) => {
+                runtimeDeviation = duration / 60 / result.runtime;
+                details = result;
+
+                if (
+                  !currentBestMovie ||
+                  Math.abs(runtimeDeviation - 1) < currentBestRuntime
+                ) {
+                  currentBestRuntime = Math.abs(runtimeDeviation - 1);
+                  currentBestMovie = movie;
+                }
+              });
+          }
+        })
+      );
+
       return currentBestMovie;
     })
     .catch((error) => console.log(error));

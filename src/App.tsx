@@ -16,35 +16,46 @@ function App() {
     setLoading(true);
     await set("directory", dirHandle);
 
-    let entries = [];
+    let entries: any = [];
     // loop over all entries in directory
     for await (const fileHandle of dirHandle.values()) {
       // check if entry is a video file
       if (fileHandle.kind === "file") {
         const file = await fileHandle.getFile();
 
-        // get video duration
-        let video = document.createElement("video");
-        video.setAttribute("src", window.URL.createObjectURL(file));
-        let duration: number;
-        video.onloadeddata = function () {
-          duration = video.duration;
-          console.log(duration / 60);
-        };
         if (file.type === "video/mp4") {
-          const searchResult = await getMovieDetails(fileHandle.name);
+          // get video duration
+          let duration = 0;
+          let video = document.createElement("video");
+          video.setAttribute("src", window.URL.createObjectURL(file));
 
-          if (searchResult) {
-            const movie = {
-              id: searchResult.id,
-              name: searchResult.original_title,
-              poster: await getImage(searchResult.poster_path),
-              backdrop: await getImage(searchResult.backdrop_path),
-              fileHandle: fileHandle,
-            };
-            await set(movie.id, movie);
-            entries.push(movie);
-          }
+          video.onloadeddata = async function () {
+            duration = video.duration;
+            /* console.log(
+              searchResult.original_title +
+                ": " +
+                duration / 60 / searchResult.runtime
+            ); */
+            // get movie details
+            const searchResult = await getMovieDetails(
+              fileHandle.name,
+              duration
+            );
+            if (searchResult) {
+              console.log(
+                fileHandle.name + " -> " + searchResult.original_title
+              );
+              const movie = {
+                id: searchResult.id,
+                name: searchResult.original_title,
+                poster: await getImage(searchResult.poster_path),
+                backdrop: await getImage(searchResult.backdrop_path),
+                fileHandle: fileHandle,
+              };
+              await set(movie.id, movie);
+              entries.push(movie);
+            }
+          };
         }
       }
     }
