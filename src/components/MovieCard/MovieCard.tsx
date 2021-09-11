@@ -11,17 +11,23 @@ export default function MovieCard(props: MovieCardProps) {
   const [showPopup, setShowPopup] = React.useState<false | string>(false);
   const movie = props.movie;
   return (
-    <div className="movieCard" key={movie.id}>
-      {movie.poster && (
-        <img
-          src={URL.createObjectURL(movie.poster)}
-          onClick={() => setShowPopup(movie.name)}
-          alt={movie.name}
-        />
-      )}
+    <>
+      <div
+        onClick={
+          showPopup === false ? () => setShowPopup(movie.name) : undefined
+        }
+        className="movieCard"
+        key={movie.id}
+      >
+        {movie.poster ? (
+          <img src={URL.createObjectURL(movie.poster)} alt={movie.name} />
+        ) : (
+          <div>{movie.name}</div>
+        )}
+      </div>
       {showPopup === movie.name && (
         <Popup movie={movie} close={() => setShowPopup(false)} />
       )}
-    </div>
+    </>
   );
 }

@@ -40,6 +40,7 @@ export default function Popup(props: PopupProps) {
 
   return (
     <div className="popup">
+      <div className="popupBackdrop" onClick={props.close} />
       <div className="popupContent">
         {file && (
           <ReactPlayer
