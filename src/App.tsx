@@ -16,7 +16,6 @@ function App() {
     setLoading(true);
     await set("directory", dirHandle);
 
-    let entries: any = [];
     // loop over all entries in directory
     for await (const fileHandle of dirHandle.values()) {
       // check if entry is a video file
@@ -32,12 +31,6 @@ function App() {
 
           video.onloadeddata = async function () {
             duration = video.duration;
-            /* console.log(
-              searchResult.original_title +
-                ": " +
-                duration / 60 / searchResult.runtime
-            ); */
-            // get movie details
             const searchResult = await getMovieDetails(
               fileHandle.name,
               duration
@@ -50,20 +43,21 @@ function App() {
               const movie = {
                 id: searchResult.id,
                 name: searchResult.original_title,
+                // TODO: look for images if no path is given
                 poster: await getImage(searchResult.poster_path),
                 backdrop: await getImage(searchResult.backdrop_path),
                 fileHandle: fileHandle,
               };
-              await update(movie.id, () => movie);
-              entries.push(movie);
+
+              update(movie.id, () => movie).then(() =>
+                values().then((values) => setMovies(values))
+              );
             }
           };
         }
       }
     }
     setLoading(false);
-    // TODO: add movies one by one for better loading experience
-    setMovies(entries);
   };
 
   React.useEffect(() => {

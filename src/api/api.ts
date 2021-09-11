@@ -11,7 +11,7 @@ export const getMovieDetails = (name: string, duration: number): any => {
     .then((res) => res.json())
     .then(async (res) => {
       if (res.results.length === 0) console.log(`${fileName}: no match found`);
-      // TODO: better score system: take exact name match, original title and movie length into consideration
+      // TODO: take collections into consideration
       // TODO: chain queries: https://developers.themoviedb.org/3/getting-started/append-to-response
       let currentBestMovie: any;
       let currentBestRuntime: number;
@@ -35,16 +35,17 @@ export const getMovieDetails = (name: string, duration: number): any => {
 
             exactMatchFound = true;
             return await fetch(
-              `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_API_KEY}`
+              `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_API_KEY}&language=de-DE`
             )
               .then((res) => res.json())
               .then((result) => {
+                console.log(result);
                 currentBestMovie = result;
               });
           } else {
             let runtimeDeviation: number;
             await fetch(
-              `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_API_KEY}`
+              `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_API_KEY}&language=de-DE`
             )
               .then((res) => res.json())
               .then((result) => {
@@ -85,7 +86,7 @@ export const getImage = (path: string) => {
 
 export const getMoviePoster = (id: number) => {
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=en-US&include_image_language=en`
+    `https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=de-DE&include_image_language=en`
   )
     .then((res) => res.json())
     .then((result) => {
@@ -109,7 +110,7 @@ export const getMoviePoster = (id: number) => {
 
 export const getMovieBackdrop = (id: number) => {
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=en-US&include_image_language=en`
+    `https://api.themoviedb.org/3/movie/${id}/images?api_key=${TMDB_API_KEY}&language=de-DE&include_image_language=en`
   )
     .then((res) => res.json())
     .then((result) => {
