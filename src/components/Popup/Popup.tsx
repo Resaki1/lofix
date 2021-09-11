@@ -1,8 +1,14 @@
 import React from "react";
 import ReactPlayer from "react-player";
+import { Movie } from "../../types/types";
 import "./Popup.css";
 
-async function verifyPermission(fileHandle: any) {
+type PopupProps = {
+  movie: Movie;
+  close: () => void;
+};
+
+async function verifyPermission(fileHandle: FileSystemFileHandle) {
   // Check if permission was already granted. If so, return true.
   if (
     (await FileSystemHandle.prototype.queryPermission.call(fileHandle)) ===
@@ -21,13 +27,13 @@ async function verifyPermission(fileHandle: any) {
   return false;
 }
 
-export default function Popup(props: any) {
-  const [file, setFile] = React.useState();
+export default function Popup(props: PopupProps) {
+  const [file, setFile] = React.useState<File>();
 
   React.useEffect(() => {
     verifyPermission(props.movie.fileHandle).then((accessAllowed) => {
       if (accessAllowed) {
-        props.movie.fileHandle.getFile().then((file: any) => setFile(file));
+        props.movie.fileHandle.getFile().then((file: File) => setFile(file));
       }
     });
   }, [props.movie.fileHandle]);

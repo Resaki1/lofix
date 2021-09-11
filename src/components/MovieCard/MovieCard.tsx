@@ -1,9 +1,14 @@
 import React from "react";
+import { Movie } from "../../types/types";
 import Popup from "../Popup/Popup";
 import "./MovieCard.css";
 
-export default function MovieCard(props: any) {
-  const [showPopup, setShowPopup] = React.useState(false);
+type MovieCardProps = {
+  movie: Movie;
+};
+
+export default function MovieCard(props: MovieCardProps) {
+  const [showPopup, setShowPopup] = React.useState<false | string>(false);
   const movie = props.movie;
   return (
     <div className="movieCard" key={movie.id}>

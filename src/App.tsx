@@ -3,16 +3,19 @@ import { values, set, update } from "idb-keyval";
 import { getMovieDetails, getImage } from "./api/api";
 import "./App.css";
 import MovieCard from "./components/MovieCard/MovieCard";
+import { Movie } from "./types/types";
 
 function App() {
-  const [movies, setMovies]: any[] = React.useState();
-  const [loading, setLoading]: any[] = React.useState(false);
+  const [movies, setMovies] = React.useState<Movie[]>();
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const handleClick = async () => {
     // open file picker
-    const dirHandle = await (window as any).showDirectoryPicker({
-      multiple: true,
-    });
+    const dirHandle: FileSystemDirectoryHandle = await window.showDirectoryPicker(
+      {
+        multiple: true,
+      }
+    );
     setLoading(true);
     await set("directory", dirHandle);
 
@@ -29,7 +32,7 @@ function App() {
           let video = document.createElement("video");
           video.setAttribute("src", window.URL.createObjectURL(file));
 
-          video.onloadeddata = async function () {
+          video.onloadeddata = async function (): Promise<void> {
             duration = video.duration;
             const searchResult = await getMovieDetails(
               fileHandle.name,
@@ -40,9 +43,9 @@ function App() {
                 fileHandle.name + " -> " + searchResult.original_title
               );
 
-              const movie = {
+              const movie: Movie = {
                 id: searchResult.id,
-                name: searchResult.original_title,
+                name: searchResult.title,
                 // TODO: look for images if no path is given
                 poster: await getImage(searchResult.poster_path),
                 backdrop: await getImage(searchResult.backdrop_path),
@@ -72,7 +75,7 @@ function App() {
       <div className="movies">
         {loading && <h1>loading</h1>}
         {movies &&
-          movies.map((movie: any) => (
+          movies.map((movie: Movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
       </div>
