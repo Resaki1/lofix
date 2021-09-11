@@ -46,7 +46,11 @@ export default function Popup(props: PopupProps) {
           <ReactPlayer
             width="100%"
             controls
-            light={URL.createObjectURL(props.movie.backdrop)}
+            light={
+              props.movie.backdrop
+                ? URL.createObjectURL(props.movie.backdrop)
+                : undefined
+            }
             playing
             url={URL.createObjectURL(file)}
           />

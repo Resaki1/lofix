@@ -1,10 +1,19 @@
 .movieCard {
-    cursor: pointer;
-    width: fit-content;
+  cursor: pointer;
+  width: 160px;
+  margin: 16px;
 }
 
 .movieCard > img {
-    width: 160px;
-    margin: 16px;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
+.emptyMovieCard {
+  height: 100%;
+  width: 100%;
+  background-color: gray;
+  color: white;
+  text-align: center;
 }

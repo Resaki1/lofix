@@ -24,9 +24,9 @@ export const getMovieDetails = (name: string, duration: number): any => {
 
           // return details if file name is exact match
           if (
-            fileName.normalize().toLowerCase() ==
+            fileName.normalize().toLowerCase() ===
               movie.original_title.normalize().toLowerCase() ||
-            fileName.normalize().toLowerCase() ==
+            fileName.normalize().toLowerCase() ===
               movie.title.normalize().toLowerCase()
           ) {
             console.log(

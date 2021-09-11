@@ -22,7 +22,7 @@ export default function MovieCard(props: MovieCardProps) {
         {movie.poster ? (
           <img src={URL.createObjectURL(movie.poster)} alt={movie.name} />
         ) : (
-          <div>{movie.name}</div>
+          <div className="emptyMovieCard">{movie.name}</div>
         )}
       </div>
       {showPopup === movie.name && (

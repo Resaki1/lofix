@@ -1,5 +1,5 @@
 import React from "react";
-import { values, set, update } from "idb-keyval";
+import { values, update } from "idb-keyval";
 import { getMovieDetails, getImage } from "./api/api";
 import "./App.css";
 import MovieCard from "./components/MovieCard/MovieCard";
@@ -17,7 +17,7 @@ function App() {
       }
     );
     setLoading(true);
-    await set("directory", dirHandle);
+    /* await set("directory", dirHandle); */
 
     // loop over all entries in directory
     for await (const fileHandle of dirHandle.values()) {
@@ -34,6 +34,7 @@ function App() {
 
           video.onloadeddata = async function (): Promise<void> {
             duration = video.duration;
+            // TODO: check if movie has been set twice in one go
             const searchResult = await getMovieDetails(
               fileHandle.name,
               duration
