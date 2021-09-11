@@ -20,6 +20,7 @@ function App() {
     // loop over all entries in directory
     for await (const fileHandle of dirHandle.values()) {
       // check if entry is a video file
+      // TODO: recursively also include subfolders
       if (fileHandle.kind === "file") {
         const file = await fileHandle.getFile();
 

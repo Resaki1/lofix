@@ -2,13 +2,14 @@ const TMDB_API_KEY = "da2b03ca0b0a10e22f32080f94056b75";
 
 export const getMovieDetails = (name: string, duration: number): any => {
   const fileName = name.split(".").slice(0, -1).join(".");
-  const nameToSearch = fileName.replaceAll(" ", "+").replaceAll("_", "+");
+  const nameToSearch = encodeURIComponent(fileName.normalize());
 
   return fetch(
     `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${nameToSearch}`
   )
     .then((res) => res.json())
     .then(async (res) => {
+      if (res.results.length === 0) console.log(`${fileName}: no match found`);
       // TODO: better score system: take exact name match, original title and movie length into consideration
       // TODO: chain queries: https://developers.themoviedb.org/3/getting-started/append-to-response
       let currentBestMovie: any;
@@ -21,7 +22,7 @@ export const getMovieDetails = (name: string, duration: number): any => {
           let details;
 
           // return details if file name is exact match
-          if (fileName == movie.original_title) {
+          if (fileName.normalize() == movie.original_title.normalize()) {
             console.log(
               "exact match found: " + fileName + " == " + movie.original_title
             );
