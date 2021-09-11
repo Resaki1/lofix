@@ -1,5 +1,5 @@
 import React from "react";
-import { values, set } from "idb-keyval";
+import { values, set, update } from "idb-keyval";
 import { getMovieDetails, getImage } from "./api/api";
 import "./App.css";
 import MovieCard from "./components/MovieCard/MovieCard";
@@ -45,6 +45,7 @@ function App() {
               console.log(
                 fileHandle.name + " -> " + searchResult.original_title
               );
+
               const movie = {
                 id: searchResult.id,
                 name: searchResult.original_title,
@@ -52,7 +53,7 @@ function App() {
                 backdrop: await getImage(searchResult.backdrop_path),
                 fileHandle: fileHandle,
               };
-              await set(movie.id, movie);
+              await update(movie.id, () => movie);
               entries.push(movie);
             }
           };

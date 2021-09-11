@@ -22,6 +22,10 @@ export const getMovieDetails = (name: string, duration: number): any => {
 
           // return details if file name is exact match
           if (fileName == movie.original_title) {
+            console.log(
+              "exact match found: " + fileName + " == " + movie.original_title
+            );
+
             exactMatchFound = true;
             return await fetch(
               `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_API_KEY}`
@@ -37,6 +41,12 @@ export const getMovieDetails = (name: string, duration: number): any => {
             )
               .then((res) => res.json())
               .then((result) => {
+                console.log(
+                  `${fileName}: ${Math.round(duration / 60)}, ${
+                    result.original_title
+                  }: ${result.runtime}`
+                );
+
                 runtimeDeviation = duration / 60 / result.runtime;
                 details = result;
 
