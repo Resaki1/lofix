@@ -5,7 +5,8 @@ export const getMovieDetails = (name: string, duration: number): any => {
   const nameToSearch = encodeURIComponent(fileName.normalize());
 
   return fetch(
-    `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${nameToSearch}`
+    // TODO: add localization for better exact match results
+    `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${nameToSearch}&language=de-DE`
   )
     .then((res) => res.json())
     .then(async (res) => {
@@ -22,7 +23,12 @@ export const getMovieDetails = (name: string, duration: number): any => {
           let details;
 
           // return details if file name is exact match
-          if (fileName.normalize() == movie.original_title.normalize()) {
+          if (
+            fileName.normalize().toLowerCase() ==
+              movie.original_title.normalize().toLowerCase() ||
+            fileName.normalize().toLowerCase() ==
+              movie.title.normalize().toLowerCase()
+          ) {
             console.log(
               "exact match found: " + fileName + " == " + movie.original_title
             );
