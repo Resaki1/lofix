@@ -1,8 +1,9 @@
+import { Movie } from "../types/types";
+
 const TMDB_API_KEY = "da2b03ca0b0a10e22f32080f94056b75";
 
 export const getMovieDetails = (name: string, duration: number): any => {
-  const fileName = name.split(".").slice(0, -1).join(".");
-  const nameToSearch = encodeURIComponent(fileName.normalize());
+  const nameToSearch = encodeURIComponent(name.normalize());
 
   return fetch(
     // TODO: add localization for better exact match results
@@ -10,10 +11,10 @@ export const getMovieDetails = (name: string, duration: number): any => {
   )
     .then((res) => res.json())
     .then(async (res) => {
-      if (res.results.length === 0) console.log(`${fileName}: no match found`);
+      if (res.results.length === 0) console.log(`${name}: no match found`);
       // TODO: take collections into consideration
       // TODO: chain queries: https://developers.themoviedb.org/3/getting-started/append-to-response
-      let currentBestMovie: any;
+      let currentBestMovie: Movie | undefined;
       let currentBestRuntime: number;
       let exactMatchFound = false;
 
@@ -22,48 +23,32 @@ export const getMovieDetails = (name: string, duration: number): any => {
           if (exactMatchFound) return;
 
           // return details if file name is exact match
+          // TODO: first sort movies by popularity to improve results
           if (
-            fileName.normalize().toLowerCase() ===
+            name.normalize().toLowerCase() ===
               movie.original_title.normalize().toLowerCase() ||
-            fileName.normalize().toLowerCase() ===
+            name.normalize().toLowerCase() ===
               movie.title.normalize().toLowerCase()
           ) {
             console.log(
-              "exact match found: " + fileName + " == " + movie.original_title
+              "exact match found: " + name + " == " + movie.original_title
             );
 
             exactMatchFound = true;
-            return await fetch(
-              `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_API_KEY}&language=de-DE`
-            )
-              .then((res) => res.json())
-              .then((result) => {
-                console.log(result);
-                currentBestMovie = result;
-              });
+            return await getDetails("movie", movie.id).then((result) => {
+              currentBestMovie = result;
+            });
           } else {
-            let runtimeDeviation: number;
-            await fetch(
-              `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_API_KEY}&language=de-DE`
-            )
-              .then((res) => res.json())
-              .then((result) => {
-                console.log(
-                  `${fileName}: ${Math.round(duration / 60)}, ${
-                    result.original_title
-                  }: ${result.runtime}`
-                );
-
-                runtimeDeviation = duration / 60 / result.runtime;
-
-                if (
-                  !currentBestMovie ||
-                  Math.abs(runtimeDeviation - 1) < currentBestRuntime
-                ) {
-                  currentBestRuntime = Math.abs(runtimeDeviation - 1);
-                  currentBestMovie = movie;
-                }
-              });
+            await getDetails("movie", movie.id).then((result) => {
+              const runtimeDeviation = duration / 60 / result.runtime;
+              if (
+                !currentBestMovie ||
+                Math.abs(runtimeDeviation - 1) < currentBestRuntime
+              ) {
+                currentBestRuntime = Math.abs(runtimeDeviation - 1);
+                currentBestMovie = movie;
+              }
+            });
           }
         })
       );
@@ -71,6 +56,12 @@ export const getMovieDetails = (name: string, duration: number): any => {
       return currentBestMovie;
     })
     .catch((error) => console.log(error));
+};
+
+export const getDetails = async (type: "movie", id: number) => {
+  return await fetch(
+    `https://api.themoviedb.org/3/${type}/${id}?api_key=${TMDB_API_KEY}&language=de-DE`
+  ).then((res) => res.json());
 };
 
 export const getImage = (path: string) => {

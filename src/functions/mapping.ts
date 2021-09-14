@@ -28,8 +28,9 @@ export const mapFileToMovie = async (
 
         video.onloadeddata = async function (): Promise<void> {
           duration = video.duration;
+          const fileName = fileHandle.name.split(".").slice(0, -1).join(".");
           // TODO: check if movie has been set twice in one go
-          getMovieDetails(fileHandle.name, duration).then(
+          getMovieDetails(fileName, duration).then(
             async (searchResult: any) => {
               if (searchResult) {
                 console.log(
