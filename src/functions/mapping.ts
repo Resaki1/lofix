@@ -19,35 +19,40 @@ export const mapFileToMovie = async (
   // check if entry is a video file
   // TODO: recursively also include subfolders
   if (fileHandle.kind === "file") {
-    const file = await fileHandle.getFile();
+    fileHandle.getFile().then((file) => {
+      if (file.type === "video/mp4") {
+        // get video duration
+        let duration = 0;
+        let video = document.createElement("video");
+        video.setAttribute("src", window.URL.createObjectURL(file));
 
-    if (file.type === "video/mp4") {
-      // get video duration
-      let duration = 0;
-      let video = document.createElement("video");
-      video.setAttribute("src", window.URL.createObjectURL(file));
+        video.onloadeddata = async function (): Promise<void> {
+          duration = video.duration;
+          // TODO: check if movie has been set twice in one go
+          getMovieDetails(fileHandle.name, duration).then(
+            async (searchResult: any) => {
+              if (searchResult) {
+                console.log(
+                  fileHandle.name + " -> " + searchResult.original_title
+                );
 
-      video.onloadeddata = async function (): Promise<void> {
-        duration = video.duration;
-        // TODO: check if movie has been set twice in one go
-        const searchResult = await getMovieDetails(fileHandle.name, duration);
-        if (searchResult) {
-          console.log(fileHandle.name + " -> " + searchResult.original_title);
+                const movie: Movie = {
+                  id: searchResult.id,
+                  name: searchResult.title,
+                  // TODO: look for images if no path is given
+                  poster: await getImage(searchResult.poster_path),
+                  backdrop: await getImage(searchResult.backdrop_path),
+                  fileHandle: fileHandle,
+                };
 
-          const movie: Movie = {
-            id: searchResult.id,
-            name: searchResult.title,
-            // TODO: look for images if no path is given
-            poster: await getImage(searchResult.poster_path),
-            backdrop: await getImage(searchResult.backdrop_path),
-            fileHandle: fileHandle,
-          };
-
-          update(movie.id, () => movie).then(() =>
-            values().then((values) => setMoviesState(values))
+                update(movie.id, () => movie).then(() =>
+                  values().then((values) => setMoviesState(values))
+                );
+              }
+            }
           );
-        }
-      };
-    }
+        };
+      }
+    });
   }
 };
