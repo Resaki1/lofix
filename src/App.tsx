@@ -1,9 +1,9 @@
 import React from "react";
-import { values, update } from "idb-keyval";
-import { getMovieDetails, getImage } from "./api/api";
+import { values } from "idb-keyval";
 import "./App.css";
 import MovieCard from "./components/MovieCard/MovieCard";
 import { Movie } from "./types/types";
+import { mapDirectoryToMovies } from "./functions/mapping";
 
 function App() {
   const [movies, setMovies] = React.useState<Movie[]>();
@@ -18,50 +18,7 @@ function App() {
     );
     setLoading(true);
     /* await set("directory", dirHandle); */
-
-    // loop over all entries in directory
-    for await (const fileHandle of dirHandle.values()) {
-      // check if entry is a video file
-      // TODO: recursively also include subfolders
-      if (fileHandle.kind === "file") {
-        const file = await fileHandle.getFile();
-
-        if (file.type === "video/mp4") {
-          // get video duration
-          let duration = 0;
-          let video = document.createElement("video");
-          video.setAttribute("src", window.URL.createObjectURL(file));
-
-          video.onloadeddata = async function (): Promise<void> {
-            duration = video.duration;
-            // TODO: check if movie has been set twice in one go
-            const searchResult = await getMovieDetails(
-              fileHandle.name,
-              duration
-            );
-            if (searchResult) {
-              console.log(
-                fileHandle.name + " -> " + searchResult.original_title
-              );
-
-              const movie: Movie = {
-                id: searchResult.id,
-                name: searchResult.title,
-                // TODO: look for images if no path is given
-                poster: await getImage(searchResult.poster_path),
-                backdrop: await getImage(searchResult.backdrop_path),
-                fileHandle: fileHandle,
-              };
-
-              update(movie.id, () => movie).then(() =>
-                values().then((values) => setMovies(values))
-              );
-            }
-          };
-        }
-      }
-    }
-    setLoading(false);
+    mapDirectoryToMovies(dirHandle, setMovies).then(() => setLoading(false));
   };
 
   React.useEffect(() => {

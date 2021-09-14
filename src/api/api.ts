@@ -20,7 +20,6 @@ export const getMovieDetails = (name: string, duration: number): any => {
       await Promise.all(
         res.results.map(async (movie: any) => {
           if (exactMatchFound) return;
-          let details;
 
           // return details if file name is exact match
           if (
@@ -56,7 +55,6 @@ export const getMovieDetails = (name: string, duration: number): any => {
                 );
 
                 runtimeDeviation = duration / 60 / result.runtime;
-                details = result;
 
                 if (
                   !currentBestMovie ||
