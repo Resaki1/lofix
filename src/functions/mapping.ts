@@ -32,6 +32,7 @@ export const mapFileToMovie = async (
           // TODO: check if movie has been set twice in one go
 
           searchByName(fileName).then(async (searchResults) => {
+            console.log(searchResults);
             if (searchResults.length === 0)
               console.log(`${fileName}: no match found`);
             // TODO: take collections into consideration
@@ -60,20 +61,24 @@ export const mapFileToMovie = async (
                   );
 
                   exactMatchFound = true;
-                  await getDetails("movie", movie.id).then((result) => {
-                    currentBestMovie = result;
-                  });
-                } else {
-                  await getDetails("movie", movie.id).then((result) => {
-                    const runtimeDeviation = duration / 60 / result.runtime;
-                    if (
-                      !currentBestMovie ||
-                      Math.abs(runtimeDeviation - 1) < currentBestRuntime
-                    ) {
-                      currentBestRuntime = Math.abs(runtimeDeviation - 1);
-                      currentBestMovie = movie;
+                  await getDetails(movie.media_type, movie.id).then(
+                    (result) => {
+                      currentBestMovie = result;
                     }
-                  });
+                  );
+                } else {
+                  await getDetails(movie.media_type, movie.id).then(
+                    (result) => {
+                      const runtimeDeviation = duration / 60 / result.runtime;
+                      if (
+                        !currentBestMovie ||
+                        Math.abs(runtimeDeviation - 1) < currentBestRuntime
+                      ) {
+                        currentBestRuntime = Math.abs(runtimeDeviation - 1);
+                        currentBestMovie = movie;
+                      }
+                    }
+                  );
                 }
               })
             );
