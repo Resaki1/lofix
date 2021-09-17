@@ -1,6 +1,6 @@
 import { values, update } from "idb-keyval";
 import { Dispatch, SetStateAction } from "react";
-import { getMovieDetails, getImage } from "../api/api";
+import { getImage, searchByName, getDetails } from "../api/api";
 import { Movie } from "../types/types";
 
 export const mapDirectoryToMovies = async (
@@ -30,28 +30,73 @@ export const mapFileToMovie = async (
           duration = video.duration;
           const fileName = fileHandle.name.split(".").slice(0, -1).join(".");
           // TODO: check if movie has been set twice in one go
-          getMovieDetails(fileName, duration).then(
-            async (searchResult: any) => {
-              if (searchResult) {
-                console.log(
-                  fileHandle.name + " -> " + searchResult.original_title
-                );
 
-                const movie: Movie = {
-                  id: searchResult.id,
-                  name: searchResult.title,
-                  // TODO: look for images if no path is given
-                  poster: await getImage(searchResult.poster_path),
-                  backdrop: await getImage(searchResult.backdrop_path),
-                  fileHandle: fileHandle,
-                };
+          searchByName(fileName).then(async (searchResults) => {
+            if (searchResults.length === 0)
+              console.log(`${fileName}: no match found`);
+            // TODO: take collections into consideration
+            // TODO: chain queries: https://developers.themoviedb.org/3/getting-started/append-to-response
+            let currentBestMovie: any;
+            let currentBestRuntime: number;
+            let exactMatchFound = false;
 
-                update(movie.id, () => movie).then(() =>
-                  values().then((values) => setMoviesState(values))
-                );
-              }
+            await Promise.all(
+              searchResults.map(async (movie: any) => {
+                if (exactMatchFound) return;
+
+                // return details if file name is exact match
+                // TODO: first sort movies by popularity to improve results
+                if (
+                  fileName.normalize().toLowerCase() ===
+                    movie.original_title.normalize().toLowerCase() ||
+                  fileName.normalize().toLowerCase() ===
+                    movie.title.normalize().toLowerCase()
+                ) {
+                  console.log(
+                    "exact match found: " +
+                      fileName +
+                      " == " +
+                      movie.original_title
+                  );
+
+                  exactMatchFound = true;
+                  await getDetails("movie", movie.id).then((result) => {
+                    currentBestMovie = result;
+                  });
+                } else {
+                  await getDetails("movie", movie.id).then((result) => {
+                    const runtimeDeviation = duration / 60 / result.runtime;
+                    if (
+                      !currentBestMovie ||
+                      Math.abs(runtimeDeviation - 1) < currentBestRuntime
+                    ) {
+                      currentBestRuntime = Math.abs(runtimeDeviation - 1);
+                      currentBestMovie = movie;
+                    }
+                  });
+                }
+              })
+            );
+
+            if (currentBestMovie) {
+              console.log(
+                fileHandle.name + " -> " + currentBestMovie.original_title
+              );
+
+              const movie: Movie = {
+                id: currentBestMovie.id,
+                name: currentBestMovie.title,
+                // TODO: look for images if no path is given
+                poster: await getImage(currentBestMovie.poster_path),
+                backdrop: await getImage(currentBestMovie.backdrop_path),
+                fileHandle: fileHandle,
+              };
+
+              update(movie.id, () => movie).then(() =>
+                values().then((values) => setMoviesState(values))
+              );
             }
-          );
+          });
         };
       }
     });
