@@ -31,77 +31,91 @@ export const mapFileToMovie = async (
           const fileName = fileHandle.name.split(".").slice(0, -1).join(".");
           // TODO: check if movie has been set twice in one go
 
-          searchByName(fileName).then(async (searchResults) => {
-            console.log(searchResults);
-            if (searchResults.length === 0)
-              console.log(`${fileName}: no match found`);
-            // TODO: take collections into consideration
-            // TODO: chain queries: https://developers.themoviedb.org/3/getting-started/append-to-response
-            let currentBestMovie: any;
-            let currentBestRuntime: number;
-            let exactMatchFound = false;
+          const searchForMovie = async (nameToSearch: string) => {
+            searchByName(nameToSearch).then(async (searchResults) => {
+              console.log(searchResults);
+              if (searchResults.length === 0) {
+                console.log(`${nameToSearch}: no match found`);
+                const newName = nameToSearch.split(" ").slice(0, -1).join(" ");
+                searchForMovie(newName);
+              }
+              // TODO: take collections into consideration
+              // TODO: chain queries: https://developers.themoviedb.org/3/getting-started/append-to-response
+              let currentBestMovie: any;
+              let currentBestRuntime: number;
+              let exactMatchFound = false;
 
-            await Promise.all(
-              searchResults.map(async (movie: any) => {
-                if (exactMatchFound) return;
+              await Promise.all(
+                searchResults.map(async (movie: any) => {
+                  if (exactMatchFound) return;
 
-                // return details if file name is exact match
-                // TODO: first sort movies by popularity to improve results
-                if (
-                  fileName.normalize().toLowerCase() ===
-                    movie.original_title.normalize().toLowerCase() ||
-                  fileName.normalize().toLowerCase() ===
-                    movie.title.normalize().toLowerCase()
-                ) {
-                  console.log(
-                    "exact match found: " +
-                      fileName +
-                      " == " +
-                      movie.original_title
-                  );
+                  // return details if file name is exact match
+                  // TODO: first sort movies by popularity to improve results
+                  const original_title =
+                    movie.media_type === "movie"
+                      ? movie.original_title
+                      : movie.original_name;
+                  if (
+                    nameToSearch.normalize().toLowerCase() ===
+                      original_title.normalize().toLowerCase() ||
+                    nameToSearch.normalize().toLowerCase() ===
+                      movie.title.normalize().toLowerCase()
+                  ) {
+                    console.log(
+                      "exact match found: " +
+                        nameToSearch +
+                        " == " +
+                        original_title
+                    );
 
-                  exactMatchFound = true;
-                  await getDetails(movie.media_type, movie.id).then(
-                    (result) => {
-                      currentBestMovie = result;
-                    }
-                  );
-                } else {
-                  await getDetails(movie.media_type, movie.id).then(
-                    (result) => {
-                      const runtimeDeviation = duration / 60 / result.runtime;
-                      if (
-                        !currentBestMovie ||
-                        Math.abs(runtimeDeviation - 1) < currentBestRuntime
-                      ) {
-                        currentBestRuntime = Math.abs(runtimeDeviation - 1);
-                        currentBestMovie = movie;
+                    exactMatchFound = true;
+                    await getDetails(movie.media_type, movie.id).then(
+                      (result) => {
+                        currentBestMovie = result;
                       }
-                    }
-                  );
-                }
-              })
-            );
-
-            if (currentBestMovie) {
-              console.log(
-                fileHandle.name + " -> " + currentBestMovie.original_title
+                    );
+                  } else {
+                    await getDetails(movie.media_type, movie.id).then(
+                      (result) => {
+                        const runtimeDeviation = duration / 60 / result.runtime;
+                        if (
+                          !currentBestMovie ||
+                          Math.abs(runtimeDeviation - 1) < currentBestRuntime
+                        ) {
+                          currentBestRuntime = Math.abs(runtimeDeviation - 1);
+                          currentBestMovie = movie;
+                        }
+                      }
+                    );
+                  }
+                })
               );
 
-              const movie: Movie = {
-                id: currentBestMovie.id,
-                name: currentBestMovie.title,
-                // TODO: look for images if no path is given
-                poster: await getImage(currentBestMovie.poster_path),
-                backdrop: await getImage(currentBestMovie.backdrop_path),
-                fileHandle: fileHandle,
-              };
+              if (currentBestMovie) {
+                console.log(
+                  fileHandle.name +
+                    " -> " +
+                    (currentBestMovie.original_title
+                      ? currentBestMovie.original_title
+                      : currentBestMovie.original_name)
+                );
 
-              update(movie.id, () => movie).then(() =>
-                values().then((values) => setMoviesState(values))
-              );
-            }
-          });
+                const movie: Movie = {
+                  id: currentBestMovie.id,
+                  name: currentBestMovie.title,
+                  // TODO: look for images if no path is given
+                  poster: await getImage(currentBestMovie.poster_path),
+                  backdrop: await getImage(currentBestMovie.backdrop_path),
+                  fileHandle: fileHandle,
+                };
+
+                update(movie.id, () => movie).then(() =>
+                  values().then((values) => setMoviesState(values))
+                );
+              }
+            });
+          };
+          searchForMovie(fileName);
         };
       }
     });
