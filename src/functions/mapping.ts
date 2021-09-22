@@ -1,4 +1,4 @@
-import { values, update } from "idb-keyval";
+import { values, update, get, set } from "idb-keyval";
 import { Dispatch, SetStateAction } from "react";
 import { getImage, searchByName, getDetails } from "../api/api";
 import { Movie } from "../types/types";
@@ -33,9 +33,7 @@ export const mapFileToMovie = async (
 
           const searchForMovie = async (nameToSearch: string) => {
             searchByName(nameToSearch).then(async (searchResults) => {
-              console.log(searchResults);
               if (searchResults.length === 0) {
-                console.log(`${nameToSearch}: no match found`);
                 const newName = nameToSearch.split(" ").slice(0, -1).join(" ");
                 searchForMovie(newName);
               }
@@ -92,26 +90,57 @@ export const mapFileToMovie = async (
               );
 
               if (currentBestMovie) {
-                console.log(
-                  fileHandle.name +
-                    " -> " +
-                    (currentBestMovie.original_title
-                      ? currentBestMovie.original_title
-                      : currentBestMovie.original_name)
-                );
-
                 const movie: Movie = {
                   id: currentBestMovie.id,
-                  name: currentBestMovie.title,
+                  name: currentBestMovie.title
+                    ? currentBestMovie.title
+                    : currentBestMovie.name,
                   // TODO: look for images if no path is given
                   poster: await getImage(currentBestMovie.poster_path),
                   backdrop: await getImage(currentBestMovie.backdrop_path),
                   fileHandle: fileHandle,
                 };
 
-                update(movie.id, () => movie).then(() =>
-                  values().then((values) => setMoviesState(values))
-                );
+                get(movie.name).then(async (collection) => {
+                  // check if entry with this name exists in database
+                  if (!collection) {
+                    // name is not yet in database -> add
+                    const newCollection = {
+                      id: movie.id,
+                      name: movie.name,
+                      poster: movie.poster,
+                      parts: [movie],
+                    };
+                    update(newCollection.name, () => newCollection).then(
+                      async () =>
+                        values().then((values) => setMoviesState(values))
+                    );
+                  }
+                  // name is already in database -> check if current file is already in database
+                  else if (
+                    collection.parts.filter(
+                      (part: Movie) =>
+                        part.fileHandle.name === movie.fileHandle.name
+                    ).length === 0
+                  ) {
+                    console.log(
+                      `adding ${movie.fileHandle.name} to ${collection.name}`
+                    );
+                    // file is not part of existing collection -> add do collection
+                    const updatedCollection = collection;
+                    updatedCollection.parts.push(movie);
+                    update(collection.name, () => updatedCollection).then(
+                      async () =>
+                        values().then((values) => {
+                          console.log(values);
+                          setMoviesState(values);
+                        })
+                    );
+                  } else {
+                    // file is already part of existing collection -> update details
+                    console.log(`updating ${movie.fileHandle.name}`);
+                  }
+                });
               }
             });
           };
