@@ -1,5 +1,32 @@
+.moviesWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
 .movies {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+}
+
+.addMoviesButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size--large);
+  color: var(--color-tertiary);
+  background: var(--color-primary);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.08s ease-out;
+
+  &:hover {
+    color: var(--color-primary);
+    background: var(--color-tertiary);
+  }
 }

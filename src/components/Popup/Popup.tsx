@@ -1,4 +1,5 @@
 import React from "react";
+import { X } from "react-feather";
 import ReactPlayer from "react-player";
 import { Movie } from "../../types/types";
 import "./Popup.scss";
@@ -53,7 +54,7 @@ export default function Popup(props: PopupProps) {
         )}
         <h2>{props.movie.name}</h2>
         <button onClick={props.close} className="closeButton">
-          x
+          <X />
         </button>
       </div>
     </div>

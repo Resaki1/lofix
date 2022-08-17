@@ -4,6 +4,7 @@ import MovieCard from "../MovieCard/MovieCard";
 import { Movie } from "../../types/types";
 import { mapDirectoryToMovies } from "../../functions/mapping";
 import "./Movies.scss";
+import { Film } from "react-feather";
 
 const Movies = () => {
   const [movies, setMovies] = React.useState<Movie[]>();
@@ -27,8 +28,10 @@ const Movies = () => {
   }, []);
 
   return (
-    <>
-      <button onClick={handleClick}>choose directory</button>
+    <main className="moviesWrapper">
+      <button onClick={handleClick} className="addMoviesButton">
+        <Film size={20} /> Add your movies!
+      </button>
       <div className="movies">
         {loading && <h1>loading</h1>}
         {movies &&
@@ -36,7 +39,7 @@ const Movies = () => {
             <MovieCard key={movie.id} movie={movie} />
           ))}
       </div>
-    </>
+    </main>
   );
 };
 
