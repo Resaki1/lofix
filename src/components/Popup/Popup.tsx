@@ -1,7 +1,7 @@
 import React from "react";
 import ReactPlayer from "react-player";
 import { Movie } from "../../types/types";
-import "./Popup.css";
+import "./Popup.scss";
 
 type PopupProps = {
   movie: Movie;
@@ -51,8 +51,10 @@ export default function Popup(props: PopupProps) {
             url={URL.createObjectURL(file)}
           />
         )}
-        <h1>{props.movie.name}</h1>
-        <button onClick={props.close}>close me</button>
+        <h2>{props.movie.name}</h2>
+        <button onClick={props.close} className="closeButton">
+          x
+        </button>
       </div>
     </div>
   );

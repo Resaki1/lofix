@@ -1,0 +1,11 @@
+.header {
+  text-align: center;
+
+  > h1 {
+    font-size: 10vh;
+    color: var(--color-primary);
+
+    font-family: "VCR_OSD_MONO";
+    letter-spacing: -12px;
+  }
+}
