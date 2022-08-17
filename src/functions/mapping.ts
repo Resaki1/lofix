@@ -13,14 +13,14 @@ export const mapDirectoryToMovies = async (
 };
 
 export const mapFileToMovie = async (
-  fileHandle: FileSystemHandle,
+  fileHandle: FileSystemFileHandle | FileSystemDirectoryHandle,
   setMoviesState: Dispatch<SetStateAction<Movie[] | undefined>>
 ): Promise<void> => {
   // check if entry is a video file
   // TODO: recursively also include subfolders
   if (fileHandle.kind === "file") {
-    fileHandle.getFile().then((file) => {
-      if (file.type === "video/mp4") {
+    fileHandle.getFile().then((file: any) => {
+      if (/* file.type === "video/mp4" */ true) {
         // get video duration
         let duration = 0;
         let video = document.createElement("video");
@@ -33,8 +33,13 @@ export const mapFileToMovie = async (
 
           const searchForMovie = async (nameToSearch: string) => {
             searchByName(nameToSearch).then(async (searchResults) => {
+              if (!searchResults) {
+                return alert("No results found for " + nameToSearch);
+              }
+
               if (searchResults.length === 0) {
                 const newName = nameToSearch.split(" ").slice(0, -1).join(" ");
+                if (!newName) return alert("No results found for " + fileName);
                 searchForMovie(newName);
               }
               // TODO: take collections into consideration
@@ -110,6 +115,7 @@ export const mapFileToMovie = async (
                       name: movie.name,
                       poster: movie.poster,
                       parts: [movie],
+                      fileHandle: fileHandle,
                     };
                     update(newCollection.name, () => newCollection).then(
                       async () =>

@@ -9,18 +9,13 @@ type PopupProps = {
 };
 
 async function verifyPermission(fileHandle: FileSystemFileHandle) {
+  let opts = {};
   // Check if permission was already granted. If so, return true.
-  if (
-    (await FileSystemHandle.prototype.queryPermission.call(fileHandle)) ===
-    "granted"
-  ) {
+  if ((await fileHandle.queryPermission(opts)) === "granted") {
     return true;
   }
   // Request permission. If the user grants permission, return true.
-  if (
-    (await FileSystemHandle.prototype.requestPermission.call(fileHandle)) ===
-    "granted"
-  ) {
+  if ((await fileHandle.requestPermission(opts)) === "granted") {
     return true;
   }
   // The user didn't grant permission, so return false.
@@ -31,6 +26,7 @@ export default function Popup(props: PopupProps) {
   const [file, setFile] = React.useState<File>();
 
   React.useEffect(() => {
+    console.log(props.movie);
     verifyPermission(props.movie.fileHandle).then((accessAllowed) => {
       if (accessAllowed) {
         props.movie.fileHandle.getFile().then((file: File) => setFile(file));

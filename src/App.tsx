@@ -11,11 +11,10 @@ function App() {
 
   const handleClick = async () => {
     // open file picker
-    const dirHandle: FileSystemDirectoryHandle = await window.showDirectoryPicker(
-      {
+    const dirHandle: FileSystemDirectoryHandle =
+      await window.showDirectoryPicker({
         multiple: true,
-      }
-    );
+      });
     setLoading(true);
     /* await set("directory", dirHandle); */
     mapDirectoryToMovies(dirHandle, setMovies).then(() => setLoading(false));
