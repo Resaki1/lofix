@@ -1,7 +1,7 @@
 import React from "react";
 import { Movie } from "../../types/types";
 import Popup from "../Popup/Popup";
-import "./MovieCard.css";
+import "./MovieCard.scss";
 
 type MovieCardProps = {
   movie: Movie;

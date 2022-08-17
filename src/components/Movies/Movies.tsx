@@ -32,13 +32,15 @@ const Movies = () => {
       <button onClick={handleClick} className="addMoviesButton">
         <Film size={20} /> Add your movies!
       </button>
-      <div className="movies">
+      <ol className="movies">
         {loading && <h1>loading</h1>}
         {movies &&
           movies.map((movie: Movie) => (
-            <MovieCard key={movie.id} movie={movie} />
+            <li key={movie.id}>
+              <MovieCard key={movie.id} movie={movie} />
+            </li>
           ))}
-      </div>
+      </ol>
     </main>
   );
 };

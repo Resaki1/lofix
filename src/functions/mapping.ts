@@ -62,7 +62,7 @@ export const mapFileToMovie = async (
                     nameToSearch.normalize().toLowerCase() ===
                       original_title.normalize().toLowerCase() ||
                     nameToSearch.normalize().toLowerCase() ===
-                      movie.title.normalize().toLowerCase()
+                      movie.title?.normalize().toLowerCase()
                   ) {
                     console.log(
                       "exact match found: " +
