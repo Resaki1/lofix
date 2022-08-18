@@ -33,7 +33,7 @@ export default function Popup(props: PopupProps) {
         props.movie.fileHandle.getFile().then((file: File) => setFile(file));
       }
     });
-  }, [props.movie.fileHandle]);
+  }, [props.movie]);
 
   return (
     <div className="popup">
@@ -57,7 +57,12 @@ export default function Popup(props: PopupProps) {
           <p className="movieOverview">{props.movie.overview}</p>
           <div className="movieProperties">
             <span>Jahr: {props.movie.date}</span>
-            <span>Rating: {Math.round(props.movie.rating * 10) / 10}</span>
+            <span>
+              Rating:{" "}
+              {props.movie.rating > 0
+                ? Math.round(props.movie.rating * 10) / 10
+                : "-"}
+            </span>
           </div>
         </div>
         <button onClick={props.close} className="closeButton">
