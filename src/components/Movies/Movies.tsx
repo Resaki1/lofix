@@ -30,10 +30,10 @@ const Movies = () => {
   return (
     <main className="moviesWrapper">
       <button onClick={handleClick} className="addMoviesButton">
-        <Film size={20} /> Add your movies!
+        <Film size={20} /> Filme hinzufügen
       </button>
       <ol className="movies">
-        {loading && <h1>loading</h1>}
+        {loading && <h1>lädt</h1>}
         {movies &&
           movies.map((movie: Movie) => (
             <li key={movie.id}>

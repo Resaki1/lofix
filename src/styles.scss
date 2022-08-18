@@ -1,18 +1,40 @@
 :root {
   --color-primary: #d8566b;
-  --color-secondary: #9223a3;
+  --color-secondary: #bb23b9;
   --color-tertiary: #f9dd23;
-  --color-background-1: #101330;
+  --color-background-1: #0f0d28;
   --color-background-2: #161030;
 
   --font-size--large: 1.2rem;
+
+  * {
+    font-family: "Coolvetica";
+    letter-spacing: 1.6px;
+
+    &::selection {
+      background-color: var(--color-secondary);
+      color: var(--color-tertiary);
+    }
+  }
 }
 
 @font-face {
-  font-family: "VCR_OSD_MONO";
-  src: local("VCR_OSD_MONO"), url(./fonts/VCR_OSD_MONO.ttf) format("truetype");
+  font-family: "Johnny Fever";
+  src: local("Johnny Fever"),
+    url(./fonts/johnny-fever/johnny_fever.otf) format("opentype");
+}
+
+@font-face {
+  font-family: "Coolvetica";
+  src: local("Coolvetica"),
+    url(./fonts/coolvetica/coolvetica.otf) format("opentype");
 }
 
 body {
   background-color: var(--color-background-1);
+}
+
+h1 {
+  font-family: "Johnny Fever" !important;
+  font-weight: normal;
 }
