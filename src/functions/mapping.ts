@@ -95,14 +95,19 @@ export const mapFileToMovie = async (
               );
 
               if (currentBestMovie) {
+                console.log(currentBestMovie);
                 const movie: Movie = {
                   id: currentBestMovie.id,
-                  name: currentBestMovie.title
-                    ? currentBestMovie.title
-                    : currentBestMovie.name,
+                  name: currentBestMovie.title ?? currentBestMovie.name,
                   // TODO: look for images if no path is given
                   poster: await getImage(currentBestMovie.poster_path),
                   backdrop: await getImage(currentBestMovie.backdrop_path),
+                  date:
+                    currentBestMovie.release_date.split("-")[0] ??
+                    currentBestMovie.first_air_date.split("-")[0],
+                  genres: currentBestMovie.genres ?? currentBestMovie.genre_ids,
+                  overview: currentBestMovie.overview,
+                  rating: currentBestMovie.vote_average,
                   fileHandle: fileHandle,
                 };
 
@@ -115,6 +120,10 @@ export const mapFileToMovie = async (
                       name: movie.name,
                       poster: movie.poster,
                       parts: [movie],
+                      date: movie.date,
+                      genres: movie.genres,
+                      overview: movie.overview,
+                      rating: movie.rating,
                       fileHandle: fileHandle,
                     };
                     update(newCollection.name, () => newCollection).then(

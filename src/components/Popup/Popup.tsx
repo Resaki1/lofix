@@ -53,6 +53,13 @@ export default function Popup(props: PopupProps) {
           />
         )}
         <h2>{props.movie.name}</h2>
+        <div className="movieDetails">
+          <p className="movieOverview">{props.movie.overview}</p>
+          <div className="movieProperties">
+            <span>Jahr: {props.movie.date}</span>
+            <span>Rating: {Math.round(props.movie.rating * 10) / 10}</span>
+          </div>
+        </div>
         <button onClick={props.close} className="closeButton">
           <X />
         </button>

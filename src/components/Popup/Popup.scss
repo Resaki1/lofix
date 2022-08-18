@@ -4,6 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  overflow-y: scroll;
 }
 
 .popupBackdrop {
@@ -11,6 +12,8 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(12px);
+  top: 0;
+  position: sticky;
 }
 
 .popupContent {
@@ -18,22 +21,42 @@
   left: 16%;
   right: 16%;
   top: 8%;
-  bottom: 8%;
   height: fit-content;
   margin: auto;
   background-color: var(--color-background-2);
   border-radius: 8px;
   padding: 48px;
+  max-width: 800px;
+  box-sizing: border-box;
 
   > h2 {
     color: var(--color-primary);
   }
 
+  .movieDetails {
+    display: flex;
+    flex-direction: row;
+    gap: 64px;
+  }
+
+  .movieOverview {
+    margin: 0;
+  }
+
+  .movieProperties {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    * {
+      white-space: nowrap;
+    }
+  }
+
   .closeButton {
     cursor: pointer;
     position: absolute;
-    top: -12px;
-    right: -12px;
+    top: -20px;
+    right: -20px;
     display: flex;
     align-items: center;
     justify-content: center;
