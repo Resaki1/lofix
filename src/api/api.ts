@@ -1,6 +1,6 @@
 const TMDB_API_KEY = "da2b03ca0b0a10e22f32080f94056b75";
 
-export const searchByName = async (name: string): Promise<Object[]> => {
+export const searchByName = async (name: string): Promise<any[]> => {
   return fetch(
     // TODO: add localization for better exact match results
     `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(

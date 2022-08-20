@@ -22,7 +22,11 @@
 .emptyMovieCard {
   height: 100%;
   width: 100%;
-  background-color: gray;
-  color: white;
+  background-color: var(--color-background-2);
+  color: var(--color-primary);
   text-align: center;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

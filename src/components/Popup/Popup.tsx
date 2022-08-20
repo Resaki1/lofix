@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { X } from "react-feather";
 import ReactPlayer from "react-player";
 import { Movie } from "../../types/types";
@@ -6,6 +6,8 @@ import "./Popup.scss";
 
 type PopupProps = {
   movie: Movie;
+  backdrop: string;
+  fileHandle: FileSystemFileHandle | null;
   close: () => void;
 };
 
@@ -24,16 +26,17 @@ async function verifyPermission(fileHandle: FileSystemFileHandle) {
 }
 
 export default function Popup(props: PopupProps) {
-  const [file, setFile] = React.useState<File>();
+  const [file, setFile] = useState<File>();
 
-  React.useEffect(() => {
-    console.log(props.movie);
-    verifyPermission(props.movie.fileHandle).then((accessAllowed) => {
-      if (accessAllowed) {
-        props.movie.fileHandle.getFile().then((file: File) => setFile(file));
-      }
-    });
-  }, [props.movie]);
+  useEffect(() => {
+    if (props.fileHandle) {
+      verifyPermission(props.fileHandle).then((accessAllowed) => {
+        if (accessAllowed) {
+          props.fileHandle?.getFile().then((file: File) => setFile(file));
+        }
+      });
+    }
+  }, [props.fileHandle]);
 
   return (
     <div className="popup">
@@ -43,11 +46,7 @@ export default function Popup(props: PopupProps) {
           <ReactPlayer
             width="100%"
             controls
-            light={
-              props.movie.backdrop
-                ? URL.createObjectURL(props.movie.backdrop)
-                : undefined
-            }
+            light={props.backdrop}
             playing
             url={URL.createObjectURL(file)}
           />
@@ -56,6 +55,7 @@ export default function Popup(props: PopupProps) {
         <div className="movieDetails">
           <p className="movieOverview">{props.movie.overview}</p>
           <div className="movieProperties">
+            <span>Länge: {Math.round(props.movie.duration / 60)} Minuten</span>
             <span>Jahr: {props.movie.date}</span>
             <span>
               Rating:{" "}

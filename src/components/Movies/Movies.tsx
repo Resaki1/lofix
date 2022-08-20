@@ -1,14 +1,16 @@
-import React from "react";
-import { values } from "idb-keyval";
+import { useState } from "react";
 import MovieCard from "../MovieCard/MovieCard";
 import { Movie } from "../../types/types";
 import { mapDirectoryToMovies } from "../../functions/mapping";
 import "./Movies.scss";
 import { Film } from "react-feather";
+import { useMovieStore } from "../../store/store";
 
 const Movies = () => {
-  const [movies, setMovies] = React.useState<Movie[]>();
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const movies = useMovieStore((state) => state.movies);
+  const addMovie = useMovieStore((state) => state.addMovie);
 
   const handleClick = async () => {
     // open file picker
@@ -18,14 +20,8 @@ const Movies = () => {
       });
     setLoading(true);
     /* await set("directory", dirHandle); */
-    mapDirectoryToMovies(dirHandle, setMovies).then(() => setLoading(false));
+    mapDirectoryToMovies(dirHandle, addMovie).then(() => setLoading(false));
   };
-
-  React.useEffect(() => {
-    values().then((values) => {
-      setMovies(values);
-    });
-  }, []);
 
   return (
     <main className="moviesWrapper">
