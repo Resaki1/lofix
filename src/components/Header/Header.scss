@@ -1,8 +1,10 @@
+@import "src/styles";
+
 .header {
   text-align: center;
 
   > h1 {
     font-size: 10vh;
-    color: var(--color-secondary);
+    color: $color-secondary;
   }
 }

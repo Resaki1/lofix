@@ -1,3 +1,5 @@
+@import "src/styles";
+
 .popup {
   position: fixed;
   top: 0;
@@ -24,14 +26,14 @@
   margin-bottom: 64px;
   height: fit-content;
   margin: auto;
-  background-color: var(--color-background-2);
+  background-color: $color-background-2;
   border-radius: 8px;
   padding: 64px;
   max-width: 928px;
   box-sizing: border-box;
 
   > h2 {
-    color: var(--color-primary);
+    color: $color-primary;
   }
 
   .movieDetails {
@@ -63,8 +65,8 @@
         margin-bottom: 8px;
         padding: 4px 8px;
         border-radius: 64px;
-        background-color: var(--color-background-1);
-        color: var(--color-primary);
+        background-color: $color-background-1;
+        color: $color-primary;
       }
     }
   }
@@ -77,8 +79,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-tertiary);
-    background: var(--color-primary);
+    color: $color-tertiary;
+    background: $color-primary;
     border: none;
     width: 40px;
     height: 40px;
@@ -87,8 +89,8 @@
     transition: all 0.08s ease-out;
 
     &:hover {
-      color: var(--color-primary);
-      background: var(--color-tertiary);
+      color: $color-primary;
+      background: $color-tertiary;
     }
   }
 }

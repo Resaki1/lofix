@@ -1,22 +1,22 @@
 @use "sass:color";
 
+$color-primary: #d8566b;
+$color-secondary: #e23ae0;
+$color-tertiary: #f9dd23;
+$color-background-1: #0f0d28;
+$color-background-2: #161030;
+
+$font-size--large: 1.2rem;
+
 :root {
-  --color-primary: #d8566b;
-  --color-secondary: #e23ae0;
-  --color-tertiary: #f9dd23;
-  --color-background-1: #0f0d28;
-  --color-background-2: #161030;
-
-  --font-size--large: 1.2rem;
-
   color: #fff;
   * {
     font-family: "Coolvetica";
     letter-spacing: 1.6px;
 
     &::selection {
-      background-color: var(--color-primary);
-      color: var(--color-tertiary);
+      background-color: $color-primary;
+      color: $color-tertiary;
     }
   }
 }
@@ -34,7 +34,7 @@
 }
 
 body {
-  background-color: var(--color-background-1);
+  background-color: $color-background-1;
 }
 
 h1 {
