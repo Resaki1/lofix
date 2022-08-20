@@ -5,32 +5,40 @@ import Popup from "../Popup/Popup";
 import "./MovieCard.scss";
 
 type MovieCardProps = {
-  movie: Movie;
+  movie: Partial<Movie>;
 };
 
 export default function MovieCard({ movie }: MovieCardProps) {
   const [showPopup, setShowPopup] = useState<false | string>(false);
   const [values, setValues] = useState<{
-    poster: string;
-    backdrop: string;
+    poster?: string;
+    backdrop?: string;
     fileHandle: FileSystemFileHandle | null;
   }>({ poster: "", backdrop: "", fileHandle: null });
 
   useEffect(() => {
-    get(movie.id).then((value) => {
-      setValues({
-        poster: URL.createObjectURL(value.poster),
-        backdrop: URL.createObjectURL(value.backdrop),
-        fileHandle: value.fileHandle,
+    if (movie.id) {
+      get(movie.id).then((value) => {
+        setValues({
+          poster: URL.createObjectURL(value.poster),
+          backdrop: URL.createObjectURL(value.backdrop),
+          fileHandle: value.fileHandle,
+        });
       });
-    });
-  }, [movie.id]);
+    } else if (movie.name) {
+      get(movie.name).then((value) => {
+        setValues({
+          fileHandle: value.fileHandle,
+        });
+      });
+    }
+  }, [movie.id, movie.name]);
 
   return (
     <>
       <div
         onClick={
-          showPopup === false ? () => setShowPopup(movie.name) : undefined
+          showPopup === false ? () => setShowPopup(movie.name!) : undefined
         }
         className="movieCard"
         key={movie.id}

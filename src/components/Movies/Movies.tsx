@@ -11,6 +11,8 @@ const Movies = () => {
 
   const movies = useMovieStore((state) => state.movies);
   const addMovie = useMovieStore((state) => state.addMovie);
+  const unmappedMovies = useMovieStore((state) => state.unmappedMovies);
+  const addUnmappedMovie = useMovieStore((state) => state.addUnmappedMovie);
 
   const handleClick = async () => {
     // open file picker
@@ -20,12 +22,18 @@ const Movies = () => {
       });
     setLoading(true);
     /* await set("directory", dirHandle); */
-    mapDirectoryToMovies(dirHandle, addMovie).then(() => setLoading(false));
+    mapDirectoryToMovies(dirHandle, addMovie, addUnmappedMovie).then(() =>
+      setLoading(false)
+    );
   };
 
   return (
     <main className="moviesWrapper">
-      <button onClick={handleClick} className="addMoviesButton">
+      <button
+        onClick={handleClick}
+        disabled={loading}
+        className="addMoviesButton"
+      >
         <Film size={20} /> Filme hinzufügen
       </button>
       <ol className="movies">
@@ -36,6 +44,18 @@ const Movies = () => {
             </li>
           ))}
       </ol>
+      {unmappedMovies.length > 0 && (
+        <>
+          <h2>Ohne Ergebnis</h2>
+          <ol className="movies">
+            {unmappedMovies?.map((name: string) => (
+              <li key={name}>
+                <MovieCard key={name} movie={{ name }} />
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
     </main>
   );
 };

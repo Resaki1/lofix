@@ -4,16 +4,18 @@ import { Movie } from "../types/types";
 
 export const mapDirectoryToMovies = async (
   dirHandle: FileSystemDirectoryHandle,
-  addMovie: (movie: Movie) => void
+  addMovie: (movie: Movie) => void,
+  addUnmappedMovie: (movie: string) => void
 ) => {
   for await (const fileHandle of dirHandle.values()) {
-    getMovieFromFile(fileHandle, addMovie);
+    getMovieFromFile(fileHandle, addMovie, addUnmappedMovie);
   }
 };
 
 export const getMovieFromFile = async (
   fileHandle: FileSystemFileHandle | FileSystemDirectoryHandle,
-  addMovie: (movie: Movie) => void
+  addMovie: (movie: Movie) => void,
+  addUnmappedMovie: (movie: string) => void
 ) => {
   if (fileHandle.kind === "file") {
     const file = await fileHandle.getFile();
@@ -33,7 +35,8 @@ export const getMovieFromFile = async (
 
       // no results found
       if (movies?.length === 0) {
-        return alert("No results found for " + fileName);
+        addUnmappedMovie(fileName);
+        set(fileName, { fileHandle });
       }
 
       // one result found
