@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  font-family: "Coolvetica";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: "Johnny Fever";
+  src: local("Johnny Fever"),
+    url(./fonts/johnny-fever/johnny_fever.otf) format("opentype");
+}
+
+@font-face {
+  font-family: "Coolvetica";
+  src: local("Coolvetica"),
+    url(./fonts/coolvetica/coolvetica.otf) format("opentype");
+}
