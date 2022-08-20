@@ -29,7 +29,6 @@ const Movies = () => {
         <Film size={20} /> Filme hinzufügen
       </button>
       <ol className="movies">
-        {loading && <h1>lädt</h1>}
         {movies &&
           movies.map((movie: Movie) => (
             <li key={movie.id}>

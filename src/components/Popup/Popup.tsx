@@ -58,10 +58,19 @@ export default function Popup(props: PopupProps) {
             <span>Länge: {Math.round(props.movie.duration / 60)} Minuten</span>
             <span>Jahr: {props.movie.date}</span>
             <span>
-              Rating:{" "}
+              Bewertung:{" "}
               {props.movie.rating > 0
-                ? Math.round(props.movie.rating * 10) / 10
+                ? Math.round(props.movie.rating * 10) / 10 + " / 10"
                 : "-"}
+            </span>
+            <span>
+              Genres:{" "}
+              <ol className="genres">
+                <br />
+                {props.movie.genres.map((genre) => (
+                  <li key={genre.id}>{genre.name}</li>
+                ))}
+              </ol>
             </span>
           </div>
         </div>

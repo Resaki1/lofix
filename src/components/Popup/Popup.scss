@@ -21,6 +21,7 @@
   left: 16%;
   right: 16%;
   top: 8%;
+  margin-bottom: 64px;
   height: fit-content;
   margin: auto;
   background-color: var(--color-background-2);
@@ -41,6 +42,7 @@
 
   .movieOverview {
     margin: 0;
+    width: 82%;
   }
 
   .movieProperties {
@@ -49,6 +51,21 @@
     gap: 8px;
     * {
       white-space: nowrap;
+    }
+
+    .genres {
+      all: unset;
+      white-space: normal;
+
+      li {
+        display: inline-block;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        padding: 4px 8px;
+        border-radius: 64px;
+        background-color: var(--color-background-1);
+        color: var(--color-primary);
+      }
     }
   }
 
