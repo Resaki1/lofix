@@ -49,6 +49,7 @@ export const getMovieFromFile = async (
         const backdrop = await getImage(details.backdrop_path);
         console.log(fileName + " -> " + movie.name + " (only result)");
 
+        // TODO: prevent duplicates by updating
         set(movie.id, { poster, backdrop, fileHandle });
         return addMovie({
           id: movie.id,
@@ -74,6 +75,7 @@ export const getMovieFromFile = async (
         const poster = await getImage(details.poster_path);
         const backdrop = await getImage(details.backdrop_path);
 
+        // TODO: prevent duplicates by updating
         set(movie.id, { poster, backdrop, fileHandle });
         return addMovie({
           id: movie.id,

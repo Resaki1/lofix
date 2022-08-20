@@ -1,4 +1,4 @@
-const TMDB_API_KEY = "da2b03ca0b0a10e22f32080f94056b75";
+const TMDB_API_KEY = process.env.REACT_APP_API_KEY;
 
 export const searchByName = async (name: string): Promise<any[]> => {
   return fetch(
