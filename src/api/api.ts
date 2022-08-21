@@ -16,7 +16,7 @@ export const searchByName = async (name: string): Promise<any[]> => {
 
 export const getDetails = async (type: "movie", id: number) => {
   return await fetch(
-    `https://api.themoviedb.org/3/${type}/${id}?api_key=${TMDB_API_KEY}&language=de-DE`
+    `https://api.themoviedb.org/3/${type}/${id}?api_key=${TMDB_API_KEY}&language=de-DE&append_to_response=watch/providers`
   )
     .then((res) => res.json())
     .catch((error) => console.error(error));

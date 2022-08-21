@@ -61,6 +61,7 @@ export const getMovieFromFile = async (
           overview: details.overview,
           rating: movie.vote_average,
           fileHandle,
+          streamProviders: details["watch/providers"].results?.DE?.flatrate,
         });
       }
 
@@ -86,6 +87,7 @@ export const getMovieFromFile = async (
           rating: movie.vote_average,
           fileHandle,
           alternatives: movies,
+          streamProviders: details["watch/providers"].results?.DE?.flatrate,
         });
       }
     };

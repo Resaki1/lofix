@@ -48,6 +48,7 @@ export default function Popup({
         }
       });
     }
+    console.log(movie);
   }, [fileHandle]);
 
   let newMovie: any;
@@ -109,6 +110,16 @@ export default function Popup({
                 <ol className="genres">
                   {movie.genres.map((genre) => (
                     <li key={genre.id}>{genre.name}</li>
+                  ))}
+                </ol>
+              </span>
+            )}
+            {movie.streamProviders && (
+              <span>
+                <div className="primary">Streaming: </div>
+                <ol className="streamProviders">
+                  {movie.streamProviders.map((provider) => (
+                    <li key={provider.provider_id}>{provider.provider_name}</li>
                   ))}
                 </ol>
               </span>

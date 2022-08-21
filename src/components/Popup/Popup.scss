@@ -51,6 +51,8 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 18%;
+
     * {
       white-space: nowrap;
     }
@@ -82,7 +84,9 @@
   .primary {
     color: $color-primary;
   }
-
+  .streamProviders {
+    all: unset;
+  }
   .changeMovieWrapper {
     h3 {
       margin-top: 32px;
