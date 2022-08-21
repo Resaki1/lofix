@@ -32,10 +32,12 @@ export const getMovieFromFile = async (
       // search for movie by name
       const fileName = file.name.split(".")[0];
       const movies = await getMoviesByName(fileName);
+      console.log(movies);
 
       // no results found
-      if (movies?.length === 0) {
+      if (movies?.length === 0 || movies === undefined) {
         addUnmappedMovie(fileName);
+        // TODO: remove entry if result was updated with different name
         update(fileName, () => ({ fileHandle }));
       }
 
@@ -92,15 +94,20 @@ export const getMovieFromFile = async (
 };
 
 const getMoviesByName = async (nameToSearch: string) => {
-  const movies = await searchByName(nameToSearch);
+  let movies = await searchByName(nameToSearch);
 
   if (movies.length === 0) {
-    const newName = nameToSearch.split(" ").slice(0, -1).join(" ");
-    if (!newName) return alert("No results found for " + movies);
-    getMoviesByName(newName);
-  }
-
-  return movies;
+    let newName = "";
+    for (let i = 0; i < nameToSearch.split(" ").length; i++) {
+      newName = nameToSearch.split(" ").slice(0, -1).join(" ");
+      movies = await searchByName(newName);
+      if (!newName) {
+        return movies;
+      } else if (movies.length > 0) {
+        return movies;
+      }
+    }
+  } else return movies;
 };
 
 const getBestResult = async (

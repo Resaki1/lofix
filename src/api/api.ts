@@ -8,7 +8,10 @@ export const searchByName = async (name: string): Promise<any[]> => {
     )}&language=de-DE`
   )
     .then((res) => res.json())
-    .then((response) => response.results)
+    .then((response) => {
+      console.log(response.results);
+      return response.results;
+    })
     .catch((error) => console.error(error));
 };
 

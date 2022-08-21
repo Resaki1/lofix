@@ -34,6 +34,7 @@ export default function Popup({
   const [file, setFile] = useState<File>();
 
   useEffect(() => {
+    // TODO: handle file not found
     if (fileHandle) {
       verifyPermission(fileHandle).then((accessAllowed) => {
         if (accessAllowed) {
@@ -83,6 +84,7 @@ export default function Popup({
                 </ol>
               </span>
             )}
+            {/* TODO: add remove button */}
           </div>
         </div>
         <button onClick={close} className="closeButton">
