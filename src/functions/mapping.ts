@@ -1,4 +1,4 @@
-import { set } from "idb-keyval";
+import { update } from "idb-keyval";
 import { getImage, searchByName, getDetails } from "../api/api";
 import { Movie } from "../types/types";
 
@@ -36,21 +36,19 @@ export const getMovieFromFile = async (
       // no results found
       if (movies?.length === 0) {
         addUnmappedMovie(fileName);
-        set(fileName, { fileHandle });
+        update(fileName, () => ({ fileHandle }));
       }
 
       // one result found
       if (movies?.length === 1) {
         const movie = movies[0];
 
-        // TODO: chain API calls
         const details = await getDetails(movie.media_type, movie.id);
         const poster = await getImage(details.poster_path, 300);
         const backdrop = await getImage(details.backdrop_path, 1280);
         console.log(fileName + " -> " + movie.name + " (only result)");
 
-        // TODO: prevent duplicates by updating
-        set(movie.id, { poster, backdrop, fileHandle });
+        update(movie.id, () => ({ poster, backdrop, fileHandle }));
         return addMovie({
           id: movie.id,
           name: movie.title ?? movie.name,
@@ -70,13 +68,11 @@ export const getMovieFromFile = async (
       if (movies && movies.length > 1) {
         movie = await getBestResult(fileName, duration, movies);
 
-        // TODO: chain API calls
         const details = await getDetails(movie.media_type, movie.id);
         const poster = await getImage(details.poster_path, 300);
         const backdrop = await getImage(details.backdrop_path, 1280);
 
-        // TODO: prevent duplicates by updating
-        set(movie.id, { poster, backdrop, fileHandle });
+        update(movie.id, () => ({ poster, backdrop, fileHandle }));
         return addMovie({
           id: movie.id,
           name: movie.title ?? movie.name,
