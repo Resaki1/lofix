@@ -68,7 +68,7 @@ export default function Popup({
     <div className="popup">
       <div className="popupBackdrop" onClick={close} />
       <div className="popupContent">
-        {file && (
+        {file ? (
           <ReactPlayer
             width="100%"
             controls
@@ -76,18 +76,28 @@ export default function Popup({
             playing
             url={URL.createObjectURL(file)}
           />
+        ) : (
+          <img className="videoPlaceholder" src={backdrop} alt={movie.name} />
         )}
         <h2>{movie.name}</h2>
         <div className="movieDetails">
           <p className="movieOverview">{movie.overview}</p>
           <div className="movieProperties">
             {movie.duration && (
-              <span>Länge: {Math.round(movie.duration / 60)} Minuten</span>
+              <span>
+                <div className="primary">Länge: </div>
+                {Math.round(movie.duration / 60)} Minuten
+              </span>
             )}
-            {movie.date && <span>Jahr: {movie.date}</span>}
+            {movie.date && (
+              <span>
+                <div className="primary">Jahr: </div>
+                {movie.date}
+              </span>
+            )}
             {movie.rating && (
               <span>
-                Bewertung:{" "}
+                <div className="primary">Bewertung: </div>
                 {movie.rating > 0
                   ? Math.round(movie.rating * 10) / 10 + " / 10"
                   : "-"}
@@ -95,9 +105,8 @@ export default function Popup({
             )}
             {movie.genres && (
               <span>
-                Genres:{" "}
+                <div className="primary">Genres: </div>
                 <ol className="genres">
-                  <br />
                   {movie.genres.map((genre) => (
                     <li key={genre.id}>{genre.name}</li>
                   ))}

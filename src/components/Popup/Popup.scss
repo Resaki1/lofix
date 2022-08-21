@@ -62,14 +62,25 @@
       li {
         border: 1px solid $color-primary;
         display: inline-block;
-        margin: 4px 4px;
+        margin-top: 8px;
         padding: 4px 8px;
         border-radius: 64px;
         background-color: $color-background-1;
-        color: $color-primary;
+        color: white;
         text-align: center;
       }
     }
+  }
+
+  .videoPlaceholder {
+    height: 360px;
+    width: 100%;
+    object-fit: cover;
+    margin-bottom: -3px;
+  }
+
+  .primary {
+    color: $color-primary;
   }
 
   .changeMovieWrapper {
