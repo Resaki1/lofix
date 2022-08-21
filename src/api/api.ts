@@ -20,8 +20,8 @@ export const getDetails = async (type: "movie", id: number) => {
     .catch((error) => console.error(error));
 };
 
-export const getImage = (path: string) => {
-  return fetch(`https://image.tmdb.org/t/p/w500${path}`)
+export const getImage = (path: string, width: number) => {
+  return fetch(`https://image.tmdb.org/t/p/w${width}${path}`)
     .then((res) => res.blob())
     .then((result) => {
       return result;

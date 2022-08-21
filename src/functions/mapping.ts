@@ -45,8 +45,8 @@ export const getMovieFromFile = async (
 
         // TODO: chain API calls
         const details = await getDetails(movie.media_type, movie.id);
-        const poster = await getImage(details.poster_path);
-        const backdrop = await getImage(details.backdrop_path);
+        const poster = await getImage(details.poster_path, 300);
+        const backdrop = await getImage(details.backdrop_path, 1280);
         console.log(fileName + " -> " + movie.name + " (only result)");
 
         // TODO: prevent duplicates by updating
@@ -72,8 +72,8 @@ export const getMovieFromFile = async (
 
         // TODO: chain API calls
         const details = await getDetails(movie.media_type, movie.id);
-        const poster = await getImage(details.poster_path);
-        const backdrop = await getImage(details.backdrop_path);
+        const poster = await getImage(details.poster_path, 300);
+        const backdrop = await getImage(details.backdrop_path, 1280);
 
         // TODO: prevent duplicates by updating
         set(movie.id, { poster, backdrop, fileHandle });
