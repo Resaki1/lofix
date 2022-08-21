@@ -25,21 +25,4 @@
   position: absolute;
   top: 32px;
   right: 32px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--font-size--large);
-  color: $color-tertiary;
-  background: $color-primary;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.08s ease-out;
-
-  &:hover {
-    color: $color-primary;
-    background: $color-tertiary;
-  }
 }

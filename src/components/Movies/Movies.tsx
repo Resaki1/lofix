@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MovieCard from "../MovieCard/MovieCard";
 import { Movie } from "../../types/types";
 import { mapDirectoryToMovies } from "../../functions/mapping";
@@ -9,6 +9,7 @@ import { useMovieStore } from "../../store/store";
 const Movies = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
+  const key = useMovieStore((state) => state.key);
   const movies = useMovieStore((state) => state.movies);
   const addMovie = useMovieStore((state) => state.addMovie);
   const unmappedMovies = useMovieStore((state) => state.unmappedMovies);
@@ -28,7 +29,7 @@ const Movies = () => {
   };
 
   return (
-    <main className="moviesWrapper">
+    <main className="moviesWrapper" key={key}>
       <button
         onClick={handleClick}
         disabled={loading}

@@ -17,6 +17,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
   }>({ poster: "", backdrop: "", fileHandle: null });
 
   useEffect(() => {
+    // TODO: Show if file is not available
     if (movie.id) {
       get(movie.id).then((value) => {
         setValues({

@@ -32,7 +32,6 @@ export const getMovieFromFile = async (
       // search for movie by name
       const fileName = file.name.split(".")[0];
       const movies = await getMoviesByName(fileName);
-      console.log(movies);
 
       // no results found
       if (movies?.length === 0 || movies === undefined) {
@@ -66,7 +65,7 @@ export const getMovieFromFile = async (
       }
 
       // multiple results found
-      let movie;
+      let movie: any;
       if (movies && movies.length > 1) {
         movie = await getBestResult(fileName, duration, movies);
 

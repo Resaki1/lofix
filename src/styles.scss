@@ -1,7 +1,7 @@
 @use "sass:color";
 
 $color-primary: #d8566b;
-$color-secondary: #e23ae0;
+$color-secondary: #0efbfe;
 $color-tertiary: #f9dd23;
 $color-background-1: #0f0d28;
 $color-background-2: #161030;
@@ -34,6 +34,58 @@ h2 {
   font-size: 2.6rem;
 }
 
+h3 {
+  color: $color-primary;
+  font-size: 1.6rem;
+}
+
 p {
+  font-size: $font-size--large;
+}
+
+select {
+  border: 1px solid $color-primary;
+  background: $color-background-1;
+  color: $color-primary;
+  padding: 4px 8px;
+  height: 32px;
+  border-radius: 64px;
+  box-sizing: border-box;
+  cursor: pointer;
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  outline: none;
+
+  transition: all 0.08s ease-out;
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+
+  &:focus-visible {
+    border-color: $color-tertiary;
+  }
+}
+
+button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
   font-size: var(--font-size--large);
+  color: $color-tertiary;
+  background: $color-primary;
+  border: none;
+  padding: 0 12px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.08s ease-out;
+
+  &:hover {
+    color: $color-primary;
+    background: $color-tertiary;
+  }
 }

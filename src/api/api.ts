@@ -9,7 +9,6 @@ export const searchByName = async (name: string): Promise<any[]> => {
   )
     .then((res) => res.json())
     .then((response) => {
-      console.log(response.results);
       return response.results;
     })
     .catch((error) => console.error(error));

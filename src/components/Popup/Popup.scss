@@ -60,15 +60,28 @@
       white-space: normal;
 
       li {
+        border: 1px solid $color-primary;
         display: inline-block;
-        margin-right: 8px;
-        margin-bottom: 8px;
+        margin: 4px 4px;
         padding: 4px 8px;
         border-radius: 64px;
         background-color: $color-background-1;
         color: $color-primary;
+        text-align: center;
       }
     }
+  }
+
+  .changeMovieWrapper {
+    h3 {
+      margin-top: 32px;
+    }
+  }
+
+  .altMoviesWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
   }
 
   .closeButton {
